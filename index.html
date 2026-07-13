@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cable Harness Designer</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="cg-app-header">
+  <h1>Cable Harness Designer</h1>
+  <p class="cg-app-subtitle">Design a connector-to-connector wiring harness, see the diagram update live, export it.</p>
+</header>
+
+<main class="cg-layout">
+
+  <section class="cg-column cg-column-form">
+
+    <div class="cg-card">
+      <h2>Harness Info</h2>
+      <div class="cg-field-row">
+        <label for="harness-title">Title</label>
+        <input id="harness-title" type="text" placeholder="e.g. ESC1 Signal Harness">
+      </div>
+      <div class="cg-field-row">
+        <label for="harness-cablepn">Cable part number</label>
+        <input id="harness-cablepn" type="text" placeholder="optional">
+      </div>
+      <div class="cg-field-row">
+        <label for="harness-cabledesc">Cable description</label>
+        <input id="harness-cabledesc" type="text" placeholder="e.g. 4-cond 26AWG shielded">
+      </div>
+      <div class="cg-field-row">
+        <label for="harness-cablelength">Cable length (mm)</label>
+        <input id="harness-cablelength" type="number" min="0">
+      </div>
+      <h3 class="cg-subheading">Wire spec (applies to every wire)</h3>
+      <div class="cg-field-row">
+        <label for="harness-gauge">Gauge (AWG)</label>
+        <input id="harness-gauge" type="number" min="8" max="40">
+      </div>
+      <div class="cg-field-row">
+        <label for="harness-striplength">Strip length (mm)</label>
+        <input id="harness-striplength" type="number" min="0" placeholder="optional">
+      </div>
+      <div class="cg-field-row">
+        <label for="harness-crimpterminal">Crimp terminal P/N</label>
+        <input id="harness-crimpterminal" type="text" placeholder="optional">
+      </div>
+      <div class="cg-field-row">
+        <label for="harness-crimptool">Crimp tool</label>
+        <input id="harness-crimptool" type="text" placeholder="optional">
+      </div>
+    </div>
+
+    <div class="cg-connectors-row">
+      <div class="cg-card cg-connector-card">
+        <h2>Connector A</h2>
+        <div class="cg-field-row">
+          <label for="connA-label">Label</label>
+          <input id="connA-label" type="text" placeholder="e.g. J1">
+        </div>
+        <div class="cg-field-row">
+          <label for="connA-series">Series</label>
+          <select id="connA-series"></select>
+        </div>
+        <div class="cg-field-row">
+          <label for="connA-positions">Positions</label>
+          <input id="connA-positions" type="number" min="1" max="40">
+        </div>
+        <div class="cg-field-row">
+          <label for="connA-partnumber">Housing P/N</label>
+          <input id="connA-partnumber" type="text" placeholder="optional">
+        </div>
+        <div class="cg-field-row">
+          <label for="connA-gender">Gender</label>
+          <select id="connA-gender"></select>
+        </div>
+        <div class="cg-field-row">
+          <label for="connA-flipped">Flip connector (latch down, mirrors pin order)</label>
+          <input id="connA-flipped" type="checkbox">
+        </div>
+        <h3 class="cg-subheading">Pin labels</h3>
+        <div id="connA-pinlabels"></div>
+      </div>
+
+      <div class="cg-card cg-connector-card">
+        <h2>Connector B</h2>
+        <div class="cg-field-row">
+          <label for="connB-label">Label</label>
+          <input id="connB-label" type="text" placeholder="e.g. J2 or Pigtail">
+        </div>
+        <div class="cg-field-row">
+          <label for="connB-openend">Open end / pigtail (no connector housing)</label>
+          <input id="connB-openend" type="checkbox">
+        </div>
+        <div id="connB-connector-fields">
+          <div class="cg-field-row">
+            <label for="connB-series">Series</label>
+            <select id="connB-series"></select>
+          </div>
+          <div class="cg-field-row">
+            <label for="connB-partnumber">Housing P/N</label>
+            <input id="connB-partnumber" type="text" placeholder="optional">
+          </div>
+          <div class="cg-field-row">
+            <label for="connB-gender">Gender</label>
+            <select id="connB-gender"></select>
+          </div>
+        </div>
+        <div class="cg-field-row">
+          <label for="connB-positions">Positions</label>
+          <input id="connB-positions" type="number" min="1" max="40">
+        </div>
+        <div class="cg-field-row">
+          <label for="connB-flipped">Flip connector (latch down, mirrors pin order)</label>
+          <input id="connB-flipped" type="checkbox">
+        </div>
+        <h3 class="cg-subheading">Pin labels</h3>
+        <div id="connB-pinlabels"></div>
+      </div>
+    </div>
+
+    <div class="cg-card">
+      <h2>Wire Mapping</h2>
+      <div id="wire-table-mount" class="cg-wire-table-wrap"></div>
+    </div>
+
+  </section>
+
+  <section class="cg-column cg-column-preview">
+    <div class="cg-card cg-preview-card">
+      <div class="cg-toolbar">
+        <button id="export-svg-btn" class="cg-secondary-button">Export SVG</button>
+        <button id="export-pdf-btn" class="cg-secondary-button">Export PDF</button>
+        <button id="save-json-btn" class="cg-secondary-button">Save Design</button>
+        <button id="load-json-btn" class="cg-secondary-button">Load Design</button>
+        <input type="file" id="load-json-input" accept="application/json" style="display:none">
+        <button id="new-harness-btn" class="cg-link-button">New</button>
+      </div>
+      <div class="cg-diagram-wrap">
+        <svg id="diagram" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="js/lib/jspdf.umd.min.js"></script>
+<script src="js/lib/svg2pdf.umd.min.js"></script>
+<script src="js/lib/htm-preact.umd.js"></script>
+
+<script src="js/core/pubsub.js"></script>
+<script src="js/core/store.js"></script>
+
+<script src="js/data/colors.js"></script>
+<script src="js/data/connectorPresets.js"></script>
+<script src="js/data/validation.js"></script>
+
+<script src="js/ui/formHarnessInfo.js"></script>
+<script src="js/ui/formConnectors.js"></script>
+<script src="js/ui/formWireTable.js"></script>
+<script src="js/ui/pinLabelList.js"></script>
+
+<script src="js/diagram/geometry.js"></script>
+<script src="js/diagram/connectorArt.js"></script>
+<script src="js/diagram/svgRenderer.js"></script>
+
+<script src="js/export/exportSvg.js"></script>
+<script src="js/export/exportPdf.js"></script>
+<script src="js/export/exportJson.js"></script>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>

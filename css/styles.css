@@ -1,0 +1,246 @@
+:root {
+  --cg-bg: #f4f6f9;
+  --cg-card-bg: #ffffff;
+  --cg-border: #d8dee8;
+  --cg-text: #1a1d24;
+  --cg-text-muted: #667085;
+  --cg-accent: #2f5fd8;
+  --cg-accent-hover: #234bb0;
+  --cg-warning-bg: #fff6e5;
+  --cg-warning-border: #f0c368;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cg-bg);
+  color: var(--cg-text);
+}
+
+.cg-app-header {
+  padding: 20px 28px 8px;
+}
+.cg-app-header h1 { margin: 0 0 4px; font-size: 22px; }
+.cg-app-subtitle { margin: 0; color: var(--cg-text-muted); font-size: 14px; }
+
+.cg-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 12px 28px 40px;
+}
+
+.cg-column-form {
+  flex: 1 1 640px;
+  min-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cg-column-preview {
+  flex: 1 1 480px;
+  position: sticky;
+  top: 12px;
+}
+
+.cg-card {
+  background: var(--cg-card-bg);
+  border: 1px solid var(--cg-border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.cg-card h2 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--cg-text-muted);
+}
+
+.cg-subheading {
+  margin: 14px 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--cg-text-muted);
+}
+
+.cg-connectors-row {
+  display: flex;
+  gap: 16px;
+}
+.cg-connector-card { flex: 1 1 0; min-width: 0; }
+
+.cg-field-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.cg-field-row label {
+  flex: 0 0 130px;
+  font-size: 13px;
+  color: var(--cg-text-muted);
+}
+.cg-field-row input[type="text"],
+.cg-field-row input[type="number"],
+.cg-field-row select {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--cg-border);
+  border-radius: 6px;
+  font-size: 13px;
+  background: #fff;
+  color: var(--cg-text);
+}
+.cg-field-row input[type="checkbox"] { flex: 0 0 auto; }
+
+.cg-pin-label-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.cg-pin-label-num {
+  flex: 0 0 20px;
+  text-align: right;
+  font-size: 12px;
+  color: var(--cg-text-muted);
+}
+.cg-pin-label-row input {
+  flex: 1 1 auto;
+  padding: 5px 8px;
+  border: 1px solid var(--cg-border);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.cg-wire-table-wrap { overflow-x: auto; }
+
+table.cg-wire-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+table.cg-wire-table th,
+table.cg-wire-table td {
+  border-bottom: 1px solid var(--cg-border);
+  padding: 6px 6px;
+  text-align: left;
+  white-space: nowrap;
+}
+table.cg-wire-table input,
+table.cg-wire-table select {
+  border: 1px solid var(--cg-border);
+  border-radius: 5px;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+.cg-num-input { width: 56px; }
+.cg-text-input { width: 100px; }
+.cg-input-invalid { border-color: #c0392b !important; background: #fdecea; }
+.cg-color-cell { display: flex; align-items: center; gap: 6px; }
+.cg-color-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.25);
+  flex: 0 0 auto;
+}
+
+.cg-wire-table-actions { margin-top: 10px; }
+
+.cg-icon-button {
+  border: 1px solid var(--cg-border);
+  background: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 2px 7px;
+  color: #b02a2a;
+}
+.cg-icon-button:hover { background: #fdeaea; }
+
+.cg-secondary-button {
+  background: #fff;
+  border: 1px solid var(--cg-border);
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--cg-text);
+}
+.cg-secondary-button:hover { border-color: var(--cg-accent); color: var(--cg-accent); }
+
+.cg-link-button {
+  background: none;
+  border: none;
+  color: var(--cg-accent);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+  text-decoration: underline;
+}
+.cg-link-button:hover { color: var(--cg-accent-hover); }
+
+.cg-warning {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: var(--cg-warning-bg);
+  border: 1px solid var(--cg-warning-border);
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.cg-preview-card { padding-bottom: 8px; }
+.cg-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.cg-diagram-wrap {
+  border: 1px solid var(--cg-border);
+  border-radius: 4px;
+  background: #ffffff;
+  padding: 8px;
+  overflow: auto;
+}
+#diagram { width: 100%; height: auto; display: block; }
+
+/* --- Diagram element styles: drafting/engineering-drawing look (monospace, black on
+   white, a border frame, and a title block instead of free-floating text). Also
+   mirrored, minimally, in exportSvg.js for standalone exported SVG files that won't
+   have this stylesheet attached. --- */
+.cg-frame { fill: none; stroke: #1a1a1a; stroke-width: 1.25; }
+.cg-connector-title { font: 700 13px "Consolas", "Courier New", monospace; fill: #14161a; }
+.cg-connector-subtitle { font: 9px "Consolas", "Courier New", monospace; fill: #55606e; letter-spacing: 0.03em; }
+.cg-connector-body { fill: #ffffff; stroke: #1a1a1a; stroke-width: 1.25; }
+.cg-connector-inner { fill: none; stroke: #1a1a1a; stroke-width: 0.6; }
+.cg-connector-latch { fill: #ffffff; stroke: #1a1a1a; stroke-width: 1; }
+.cg-cavity { fill: #ffffff; stroke: #1a1a1a; stroke-width: 0.8; }
+.cg-cavity-contact { fill: #e3e7ed; stroke: #1a1a1a; stroke-width: 0.6; }
+.cg-cavity-beam { stroke: #1a1a1a; stroke-width: 0.6; }
+.cg-key-mark { fill: none; stroke: #1a1a1a; stroke-width: 1; }
+.cg-pin-slot { fill: #ffffff; stroke: #1a1a1a; stroke-width: 1; }
+.cg-art-line { fill: none; stroke: #1a1a1a; stroke-width: 0.9; }
+.cg-pin-number { font: 9px "Consolas", "Courier New", monospace; fill: #14161a; }
+.cg-pin-label { font: 10px "Consolas", "Courier New", monospace; fill: #222222; }
+.cg-open-end-tick { stroke: #1a1a1a; stroke-width: 1.5; }
+.cg-wire-outlined { stroke: #999999; stroke-width: 0.5; }
+.cg-titleblock-box { fill: #ffffff; stroke: #1a1a1a; stroke-width: 1.25; }
+.cg-titleblock-rule { stroke: #1a1a1a; stroke-width: 0.75; }
+.cg-titleblock-label { font: 7px "Consolas", "Courier New", monospace; fill: #6b7280; letter-spacing: 0.06em; }
+.cg-titleblock-value { font: 700 11px "Consolas", "Courier New", monospace; fill: #14161a; }
+
+@media (max-width: 980px) {
+  .cg-layout { flex-direction: column; }
+  .cg-connectors-row { flex-direction: column; }
+  .cg-column-preview { position: static; width: 100%; }
+}
