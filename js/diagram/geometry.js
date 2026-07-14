@@ -165,6 +165,48 @@
       ' L ' + x2.toFixed(2) + ' ' + y2.toFixed(2);
   }
 
+  // Minimum vertical separation between two twisted-pair centerlines so their runs
+  // (2×amplitude plus stroke width) can never touch.
+  var PAIR_RUN_SEPARATION = TWIST_AMPLITUDE * 2 + 12;
+
+  // Pair centerlines default to the mean of the group's endpoint pin Ys, but two
+  // groups can average to the same line (e.g. symmetric pairs with both connectors
+  // latch-up, where the pin rows run in opposite directions). Spread any groups closer
+  // than PAIR_RUN_SEPARATION apart, keeping each overlapping cluster centered on its
+  // collective mean.
+  function spreadCenterlines(desired) {
+    var entries = Object.keys(desired).map(function (g) { return { group: g, y: desired[g] }; });
+    entries.sort(function (a, b) { return a.y - b.y; });
+
+    var clusters = [];
+    entries.forEach(function (e) {
+      clusters.push({ sum: e.y, items: [e] });
+      // Merge backwards while the newest cluster would collide with the previous one.
+      while (clusters.length > 1) {
+        var last = clusters[clusters.length - 1];
+        var prev = clusters[clusters.length - 2];
+        var lastCenter = last.sum / last.items.length;
+        var prevCenter = prev.sum / prev.items.length;
+        var lastTop = lastCenter - ((last.items.length - 1) / 2) * PAIR_RUN_SEPARATION;
+        var prevBottom = prevCenter + ((prev.items.length - 1) / 2) * PAIR_RUN_SEPARATION;
+        if (lastTop - prevBottom >= PAIR_RUN_SEPARATION) break;
+        prev.sum += last.sum;
+        prev.items = prev.items.concat(last.items);
+        clusters.pop();
+      }
+    });
+
+    var resolved = {};
+    clusters.forEach(function (c) {
+      var center = c.sum / c.items.length;
+      var top = center - ((c.items.length - 1) / 2) * PAIR_RUN_SEPARATION;
+      c.items.forEach(function (e, i) {
+        resolved[e.group] = top + i * PAIR_RUN_SEPARATION;
+      });
+    });
+    return resolved;
+  }
+
   // Builds the final SVG path 'd' string for every wire in the harness. Ungrouped wires
   // get a plain S-curve; wires sharing a pairGroup get the twisted-strand treatment,
   // riding a shared centerline computed from all their endpoint pin positions.
@@ -175,15 +217,17 @@
       (byGroup[w.pairGroup] = byGroup[w.pairGroup] || []).push(w);
     });
 
-    var sharedYByGroup = {};
+    var desiredYByGroup = {};
     Object.keys(byGroup).forEach(function (g) {
+      if (byGroup[g].length < 2) return; // singletons draw as plain wires
       var ys = [];
       byGroup[g].forEach(function (w) {
         ys.push(layout.pinYA(w.pinA));
         ys.push(layout.pinYB(w.pinB));
       });
-      sharedYByGroup[g] = ys.reduce(function (a, b) { return a + b; }, 0) / ys.length;
+      desiredYByGroup[g] = ys.reduce(function (a, b) { return a + b; }, 0) / ys.length;
     });
+    var sharedYByGroup = spreadCenterlines(desiredYByGroup);
 
     return harness.wires.map(function (w) {
       var x1 = layout.xARight, y1 = layout.pinYA(w.pinA);
