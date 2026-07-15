@@ -20,7 +20,6 @@
     '.cg-pin-number{font:9px "Consolas","Courier New",monospace;fill:#14161a;}' +
     '.cg-pin-label{font:10px "Consolas","Courier New",monospace;fill:#222;}' +
     '.cg-open-end-tick{stroke:#1a1a1a;stroke-width:1.5;}' +
-    '.cg-wire-outlined{stroke:#999999;stroke-width:0.5;}' +
     '.cg-titleblock-box{fill:#fff;stroke:#1a1a1a;stroke-width:1.25;}' +
     '.cg-titleblock-rule{stroke:#1a1a1a;stroke-width:0.75;}' +
     '.cg-titleblock-label{font:7px "Consolas","Courier New",monospace;fill:#6b7280;letter-spacing:0.06em;}' +

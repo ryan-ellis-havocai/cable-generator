@@ -205,9 +205,16 @@
     var g = el('g', { 'class': 'cg-wires' });
     paths.forEach(function (p) {
       var info = colorInfo(p.color);
+      // Casing underlay: a slightly wider dark stroke drawn first so light/white wires
+      // read against the white sheet. Only palette colors that opt in (info.stroke).
+      if (info.stroke) {
+        g.appendChild(el('path', {
+          d: p.d, fill: 'none', stroke: info.stroke, 'stroke-width': 5.5, 'stroke-linecap': 'round'
+        }));
+      }
       g.appendChild(el('path', {
         d: p.d, fill: 'none', stroke: info.hex, 'stroke-width': 3.5, 'stroke-linecap': 'round',
-        'class': 'cg-wire' + (info.stroke ? ' cg-wire-outlined' : '')
+        'class': 'cg-wire'
       }));
       if (info.hex2) {
         g.appendChild(el('path', {
@@ -226,6 +233,10 @@
     svg.setAttribute('viewBox', '0 0 ' + layout.width + ' ' + layout.height);
     svg.setAttribute('width', layout.width);
     svg.setAttribute('height', layout.height);
+
+    // Explicit white sheet so the diagram isn't transparent (black) in PDF export and
+    // standalone SVG files, which don't have the page's CSS background.
+    svg.appendChild(el('rect', { x: 0, y: 0, width: layout.width, height: layout.height, fill: '#ffffff' }));
 
     drawFrame(svg, layout);
     drawWires(svg, harness, layout);

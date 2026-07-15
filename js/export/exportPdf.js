@@ -19,6 +19,11 @@
 
     var doc = new window.jspdf.jsPDF({ orientation: orientation, unit: 'mm', format: [pageWidth, pageHeight] });
 
+    // Paint the whole page white first — otherwise the margin around the diagram (and
+    // any area svg2pdf leaves untouched) shows as the viewer's default dark background.
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
     return doc.svg(svg, { x: MARGIN_MM, y: MARGIN_MM, width: mmWidth, height: mmHeight })
       .then(function () {
         doc.save(CG.export.slug(harness.title) + '.pdf');
