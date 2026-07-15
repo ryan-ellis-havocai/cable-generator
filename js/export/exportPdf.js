@@ -1,6 +1,12 @@
 // PDF export: vector diagram via jsPDF + svg2pdf.js (doc.svg()), sized to a page that
-// exactly fits the diagram plus a small margin. Renders the live, on-page <svg> directly
-// (not a detached clone) so svg2pdf resolves computed styles correctly.
+// exactly fits the diagram plus a small margin.
+//
+// svg2pdf does NOT resolve the external stylesheet — it only sees inline presentation
+// attributes and inline <style>. Rendering the live on-page <svg> therefore drops every
+// .cg-* CSS rule, so class-styled elements fall back to SVG defaults (fill black), which
+// painted the whole sheet black. Instead we render the same self-contained clone the SVG
+// export uses (diagram styles baked into an inline <style>), attached off-screen so its
+// styles resolve during rendering.
 (function (global) {
   'use strict';
 
@@ -19,16 +25,30 @@
 
     var doc = new window.jspdf.jsPDF({ orientation: orientation, unit: 'mm', format: [pageWidth, pageHeight] });
 
-    // Paint the whole page white first — otherwise the margin around the diagram (and
-    // any area svg2pdf leaves untouched) shows as the viewer's default dark background.
+    // Paint the whole page white first — the margin around the diagram would otherwise
+    // show as the viewer's default (dark) background.
     doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, pageWidth, pageHeight, 'F');
 
-    return doc.svg(svg, { x: MARGIN_MM, y: MARGIN_MM, width: mmWidth, height: mmHeight })
+    var clone = CG.export.cloneSvgWithEmbeddedStyles(svg);
+    var holder = document.createElement('div');
+    holder.style.position = 'absolute';
+    holder.style.left = '-99999px';
+    holder.style.top = '0';
+    holder.appendChild(clone);
+    document.body.appendChild(holder);
+
+    function cleanup() {
+      if (holder.parentNode) holder.parentNode.removeChild(holder);
+    }
+
+    return doc.svg(clone, { x: MARGIN_MM, y: MARGIN_MM, width: mmWidth, height: mmHeight })
       .then(function () {
+        cleanup();
         doc.save(CG.export.slug(harness.title) + '.pdf');
       })
       .catch(function (err) {
+        cleanup();
         console.error('PDF export failed', err);
         alert('PDF export failed: ' + (err && err.message ? err.message : err));
       });
